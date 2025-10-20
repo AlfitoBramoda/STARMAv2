@@ -33,7 +33,7 @@ Proyek ini mengimplementasikan model STARIMA (Space-Time AutoRegressive Integrat
 | 05 | Stationarity_Test.R | ✅ | Uji stasioneritas | stationarity_results.RData |
 | 06 | Differencing.R | ✅ | Seasonal differencing | differenced_data.RData |
 | 07 | STACF_STPACF_After.R | ✅ | Plot korelasi setelah | stacf_after.png |
-| 08 | Data_Centering.R | ⏳ | Centering data | centered_data.RData |
+| 08 | Data_Centering.R | ✅ | Centering data | centered_data.RData |
 | 09 | STARIMA_Model.R | ⏳ | Model training | starima_model.RData |
 | 10 | Residual_Analysis.R | ⏳ | Evaluasi residual | residual_plots.png |
 | 11 | Forecasting.R | ⏳ | Prediksi | forecast_results.RData |
