@@ -34,11 +34,12 @@ Proyek ini mengimplementasikan model STARIMA (Space-Time AutoRegressive Integrat
 | 06 | Differencing.R | ✅ | Seasonal differencing | differenced_data.RData |
 | 07 | STACF_STPACF_After.R | ✅ | Plot korelasi setelah | stacf_after.png |
 | 08 | Data_Centering.R | ✅ | Centering data | centered_data.RData |
-| 09 | STARIMA_Model.R | ⏳ | Model training | starima_model.RData |
-| 10 | Residual_Analysis.R | ⏳ | Evaluasi residual | residual_plots.png |
-| 11 | Forecasting.R | ⏳ | Prediksi | forecast_results.RData |
-| 12 | Inverse_Transform.R | ⏳ | Kembalikan ke skala asli | forecast_original.RData |
-| 13 | Visualization.R | ⏳ | Plot hasil akhir | forecast_plot.png |
+| 09 | Data_Split.R | ✅ | Train/test split | train_test_data.RData |
+| 10 | STARIMA_Model.R | ✅ | Model training | starima_model.RData |
+| 11 | Residual_Analysis.R | ⏳ | Evaluasi residual | residual_plots.png |
+| 12 | Forecasting.R | ⏳ | Prediksi | forecast_results.RData |
+| 13 | Inverse_Transform.R | ⏳ | Kembalikan ke skala asli | forecast_original.RData |
+| 14 | Visualization.R | ⏳ | Plot hasil akhir | forecast_plot.png |
 
 **Legend**: ✅ Complete | ⏳ Pending | ❌ Error
 

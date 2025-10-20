@@ -243,14 +243,47 @@ Both decay gradually → ARMA(p,q)
 
 ---
 
-## 09_STARIMA_Model.R
-**Tujuan**: Training model STARIMA
+## 09_Data_Split.R
+**Tujuan**: Split data menjadi train (2015-2023) dan test (2024) untuk evaluasi model
 
 **Cara Kerja**:
-1. **Try different orders** (p,q) berdasarkan STACF/STPACF
-2. **Test different spatial weights**
-3. **Select best model** berdasarkan AIC/BIC
-4. **Estimate parameters** menggunakan maximum likelihood
+1. **Load centered data** dari step 08
+2. **Identify date alignment** - data sudah kehilangan 13 observasi dari differencing
+3. **Split by year**: 2015-2023 untuk training, 2024 untuk testing
+4. **Verify split**: Pastikan tidak ada data leakage
+5. **Statistical comparison**: Bandingkan distribusi train vs test
+
+**Split Strategy**:
+```
+Original data: 2015-01 to 2024-12 (120 obs)
+After differencing: 2016-02 to 2024-12 (107 obs)
+Train: 2016-02 to 2023-12 (~95 obs)
+Test: 2024-01 to 2024-12 (~12 obs)
+```
+
+**Output**: 
+- `train_data`: Data training (2015-2023)
+- `test_data`: Data testing (2024)
+- `train_dates`, `test_dates`: Corresponding dates
+- Plots perbandingan train/test
+
+**Mengapa Penting**: 
+- **Proper evaluation** - out-of-sample testing
+- **Avoid overfitting** - model tidak "melihat" test data
+- **Research validity** - standard practice untuk time series
+- **Performance metrics** - RMSE, MAE, MAPE pada data unseen
+
+---
+
+## 10_STARIMA_Model.R
+**Tujuan**: Training model STARIMA pada data training
+
+**Cara Kerja**:
+1. **Load train data** dari step 09
+2. **Try different orders** (p,q) berdasarkan STACF/STPACF
+3. **Test different spatial weights** (Uniform, Inverse Distance, Cross Correlation)
+4. **Select best model** berdasarkan AIC/BIC pada training data
+5. **Save 3 best models** (satu per spatial weight) untuk comparison
 
 **Model STARIMA(p,q)**:
 ```
@@ -258,13 +291,19 @@ Both decay gradually → ARMA(p,q)
 dimana B = backshift operator, s = spatial lag
 ```
 
-**Output**: Model STARIMA terbaik dengan parameter estimasi
+**Output**: 
+- 3 trained models dengan spatial weights berbeda
+- Model comparison results
+- Fitted vs actual plots untuk training data
 
-**Mengapa Penting**: Inti dari analisis - model untuk prediksi
+**Mengapa Penting**: 
+- **Core modeling** - inti dari analisis STARIMA
+- **Multiple candidates** - 3 model untuk evaluasi
+- **Training only** - tidak menggunakan test data
 
 ---
 
-## 10_Residual_Analysis.R
+## 11_Residual_Analysis.R
 **Tujuan**: Evaluasi kualitas model
 
 **Cara Kerja**:
@@ -279,7 +318,7 @@ dimana B = backshift operator, s = spatial lag
 
 ---
 
-## 11_Forecasting.R
+## 12_Forecasting.R
 **Tujuan**: Prediksi curah hujan masa depan
 
 **Cara Kerja**:
@@ -293,7 +332,7 @@ dimana B = backshift operator, s = spatial lag
 
 ---
 
-## 12_Inverse_Transform.R
+## 13_Inverse_Transform.R
 **Tujuan**: Kembalikan hasil ke skala asli
 
 **Cara Kerja**:
@@ -331,7 +370,7 @@ x = exp(y)          jika λ = 0
 ## 🔄 Alur Dependensi
 
 ```
-00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 → 13
+00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 → 13 → 14
 ```
 
 **Urutan Terbaru**:
@@ -344,10 +383,11 @@ x = exp(y)          jika λ = 0
 - **06**: Differencing
 - **07**: STACF/STPACF After
 - **08**: Data Centering
-- **09**: STARIMA Model
-- **10**: Residual Analysis
-- **11**: Forecasting
-- **12**: Inverse Transform
-- **13**: Visualization
+- **09**: Data Split (Train/Test)
+- **10**: STARIMA Model
+- **11**: Residual Analysis
+- **12**: Forecasting
+- **13**: Inverse Transform
+- **14**: Visualization
 
 Setiap file bergantung pada output file sebelumnya, sehingga harus dijalankan berurutan.
