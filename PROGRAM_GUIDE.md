@@ -11,7 +11,7 @@ Data Mentah → Transformasi → Stasioneritas → Modeling → Prediksi → Vis
 ---
 
 ## 00_Setup_Library.R
-**Tujuan**: Persiapan environment dan package
+**Tujuan**: Environment setup and package installation
 
 **Cara Kerja**:
 1. **Install packages** yang belum ada secara otomatis
@@ -24,7 +24,7 @@ Data Mentah → Transformasi → Stasioneritas → Modeling → Prediksi → Vis
 ---
 
 ## 01_Load_Data.R
-**Tujuan**: Memuat dan eksplorasi data awal
+**Tujuan**: Load and format spatio-temporal rainfall data
 
 **Cara Kerja**:
 1. **Read CSV files** dari 5 wilayah (Barat, Selatan, Tengah, Timur, Utara)
@@ -48,7 +48,7 @@ Data Mentah → Transformasi → Stasioneritas → Modeling → Prediksi → Vis
 ---
 
 ## 02_Spatial_Weights.R
-**Tujuan**: Membuat matriks bobot spasial
+**Tujuan**: Create spatial weight matrices (adjacency, distance, correlation)
 
 **Cara Kerja**:
 1. **Calculate distance matrix** menggunakan Haversine formula
@@ -77,7 +77,7 @@ W_standardized = W / rowSums(W)
 ---
 
 ## 03_BoxCox_Transform.R
-**Tujuan**: Stabilisasi varians data
+**Tujuan**: Optional Box-Cox transformation for variance stabilization
 
 **Cara Kerja**:
 1. **Find optimal λ** untuk setiap wilayah menggunakan maximum likelihood
@@ -103,7 +103,7 @@ y(λ) = ln(x)        jika λ = 0
 ---
 
 ## 04_STACF_STPACF_Before.R
-**Tujuan**: Analisis korelasi spasial-temporal sebelum differencing
+**Tujuan**: STACF/STPACF analysis before differencing
 
 **Cara Kerja**:
 1. **Space-Time ACF (STACF)**:
@@ -128,7 +128,7 @@ y(λ) = ln(x)        jika λ = 0
 ---
 
 ## 05_Stationarity_Test.R
-**Tujuan**: Uji stasioneritas data
+**Tujuan**: Unit root tests (ADF, KPSS)
 
 **Cara Kerja**:
 1. **Augmented Dickey-Fuller (ADF) Test**:
@@ -150,10 +150,8 @@ y(λ) = ln(x)        jika λ = 0
 
 ---
 
-
-
 ## 06_Differencing.R
-**Tujuan**: Membuat data stasioner melalui seasonal + first differencing
+**Tujuan**: Apply differencing to achieve stationarity
 
 **Cara Kerja**:
 1. **Step 1**: Seasonal differencing (lag 12) untuk menghilangkan pola musiman
@@ -186,7 +184,7 @@ yt_final = yt_seasonal - yt_seasonal-1
 ---
 
 ## 07_STACF_STPACF_After.R
-**Tujuan**: Verifikasi korelasi setelah differencing dan identifikasi model order
+**Tujuan**: STACF/STPACF analysis after differencing
 
 **Cara Kerja**:
 1. **Calculate STACF/STPACF** pada data yang sudah di-difference
@@ -221,7 +219,7 @@ Both decay gradually → ARMA(p,q)
 ---
 
 ## 08_Data_Centering.R
-**Tujuan**: Centering data untuk menghilangkan bias spasial
+**Tujuan**: Data centering and scaling
 
 **Cara Kerja**:
 1. **Calculate mean** setiap wilayah dari data yang sudah di-difference
@@ -244,7 +242,7 @@ Both decay gradually → ARMA(p,q)
 ---
 
 ## 09_Data_Split.R
-**Tujuan**: Split data menjadi train (2015-2023) dan test (2024) untuk evaluasi model
+**Tujuan**: Split data into train/test sets for validation
 
 **Cara Kerja**:
 1. **Load centered data** dari step 08
@@ -276,7 +274,7 @@ Test: 2024-01 to 2024-12 (~12 obs)
 ---
 
 ## 10_STARIMA_Model.R
-**Tujuan**: Training model STARIMA pada data training
+**Tujuan**: Model identification and estimation
 
 **Cara Kerja**:
 1. **Load train data** dari step 09
@@ -304,7 +302,7 @@ dimana B = backshift operator, s = spatial lag
 ---
 
 ## 11_Residual_Analysis.R
-**Tujuan**: Evaluasi kualitas model
+**Tujuan**: Residual diagnostics and model validation
 
 **Cara Kerja**:
 1. **Calculate residuals** dari model
@@ -319,7 +317,7 @@ dimana B = backshift operator, s = spatial lag
 ---
 
 ## 12_Forecasting.R
-**Tujuan**: Prediksi curah hujan masa depan
+**Tujuan**: Generate forecasts using best model
 
 **Cara Kerja**:
 1. **Generate forecasts** menggunakan model STARIMA
@@ -333,7 +331,7 @@ dimana B = backshift operator, s = spatial lag
 ---
 
 ## 13_Inverse_Transform.R
-**Tujuan**: Kembalikan hasil ke skala asli
+**Tujuan**: Inverse transformations to original scale
 
 **Cara Kerja**:
 1. **Undo centering**: Tambahkan kembali mean
@@ -352,8 +350,8 @@ x = exp(y)          jika λ = 0
 
 ---
 
-## 13_Visualization.R
-**Tujuan**: Visualisasi hasil akhir
+## 14_Visualization.R
+**Tujuan**: Comprehensive visualizations and summary
 
 **Cara Kerja**:
 1. **Plot historical data** vs forecast
@@ -373,7 +371,7 @@ x = exp(y)          jika λ = 0
 00 → 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 → 13 → 14
 ```
 
-**Urutan Terbaru**:
+**Urutan Final**:
 - **00**: Setup Library
 - **01**: Load Data  
 - **02**: Spatial Weights
