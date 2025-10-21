@@ -103,27 +103,26 @@ y(λ) = ln(x)        jika λ = 0
 ---
 
 ## 04_STACF_STPACF_Before.R
-**Tujuan**: STACF/STPACF analysis before differencing
+**Tujuan**: STACF/STPACF analysis before differencing with confidence bands
 
 **Cara Kerja**:
-1. **Space-Time ACF (STACF)**:
-   - Menggunakan spatial weights (W_corr) untuk weighted series
-   - Mengukur korelasi temporal pada berbagai lag (0-40)
-   - Traditional ACF plot format
-2. **Space-Time PACF (STPACF)**:
-   - Korelasi parsial setelah menghilangkan efek lag sebelumnya
-   - Traditional PACF plot format
-3. **Spatial weighting**: Setiap wilayah diweight dengan cross-correlation matrix
+1. **Calculate STACF/STPACF** untuk 3 jenis spatial weights:
+   - Uniform weights
+   - Inverse distance weights  
+   - Cross-correlation weights
+2. **Confidence bands**: ±1.96/√n untuk signifikansi statistik
+3. **Single plot layout**: 2x3 grid (3 STACF + 3 STPACF)
+4. **Function-based plotting**: Menghindari plot individual
 
 **Output**: 
-- Plot STACF dan STPACF traditional style
-- Combined plots untuk comparison
-- Data untuk identifikasi model order
+- 1 gambar dengan 6 plot (2x3 layout)
+- Confidence bands untuk interpretasi
+- Summary statistik per weight type
 
 **Mengapa Penting**: 
 - **Baseline analysis** sebelum differencing
 - **Model identification** - menentukan order (p,q) awal
-- **Spatial-temporal patterns** dalam data raw
+- **Spatial weight comparison** - pilih yang terbaik
 
 ---
 
@@ -139,82 +138,75 @@ y(λ) = ln(x)        jika λ = 0
    - H0: Data stasioner
    - H1: Data non-stasioner  
    - Jika p-value > 0.05 → fail to reject H0 → stasioner
-3. **Kombinasi hasil** kedua test untuk kesimpulan final
+3. **Summary table** dengan hasil kedua test
+4. **Visualization**: Bar plot p-values dengan threshold α=0.05
 
 **Output**:
-- Hasil p-value ADF dan KPSS per wilayah
-- Status stasioneritas (TRUE/FALSE)
-- Rekomendasi differencing jika diperlukan
+- Summary table per wilayah
+- Both_Agree kolom untuk konsistensi
+- Bar plot ADF vs KPSS p-values
+- need_differencing flag
 
-**Mengapa Penting**: Model STARIMA membutuhkan data stasioner
+**Mengapa Penting**: Menentukan apakah perlu differencing untuk stationarity
 
 ---
 
 ## 06_Differencing.R
-**Tujuan**: Apply differencing to achieve stationarity
+**Tujuan**: Apply seasonal differencing (1-B^12) with D=1, d=0
 
 **Cara Kerja**:
-1. **Step 1**: Seasonal differencing (lag 12) untuk menghilangkan pola musiman
-2. **Step 2**: First differencing pada hasil step 1 untuk menghilangkan trend
-3. **Combined approach**: ∇∇₁₂yt = ∇(yt - yt-12)
-4. **Stationarity test**: ADF + KPSS pada hasil akhir
-5. **Visualization**: Proses transformasi bertahap
+1. **Seasonal differencing only**: (1-B¹²) operator
+2. **Parameters**: D=1 (seasonal), d=0 (regular)
+3. **Minimal approach**: Sesuai rekomendasi guardrail
+4. **Post-differencing validation**: ADF + KPSS tests
+5. **Before vs After comparison**: Tabel perbandingan
+6. **Visualization**: 2x5 layout (original vs differenced untuk 5 wilayah)
 
-**Formula Lengkap**:
+**Formula**:
 ```
-Step 1: Seasonal differencing
-yt_seasonal = yt - yt-12
-
-Step 2: First differencing  
-yt_final = yt_seasonal - yt_seasonal-1
-       = (yt - yt-12) - (yt-1 - yt-13)
+Operator: (1-B¹²)
+yt_diff = yt - yt-12
+Kehilangan: 12 observasi pertama
 ```
 
 **Output**: 
-- Data stasioner dengan d=1, D=1
-- Kehilangan 13 observasi (12+1)
-- Model notation: STARIMA(p,1,q)(P,1,Q)₁₂
+- Data hasil seasonal differencing
+- Comparison table before/after
+- differencing_success flag
+- Plot 2x5 (5 wilayah, before vs after)
 
 **Mengapa Penting**: 
-- Curah hujan memiliki **strong seasonality** (wet/dry seasons)
-- **Seasonal differencing** menghilangkan pola musiman
-- **First differencing** menghilangkan trend residual
-- **Combined approach** lebih efektif untuk climate data
+- **Minimal differencing** - keep it simple (D=1, d=0)
+- **Seasonal pattern removal** - hilangkan pola musiman
+- **Preserve long-term level** - tidak over-difference
 
 ---
 
 ## 07_STACF_STPACF_After.R
-**Tujuan**: STACF/STPACF analysis after differencing
+**Tujuan**: STACF/STPACF analysis after differencing with confidence bands
 
 **Cara Kerja**:
-1. **Calculate STACF/STPACF** pada data yang sudah di-difference
-2. **Spatial weighting** menggunakan W_corr dari step 02
-3. **Traditional ACF/PACF plots** untuk interpretasi mudah
-4. **Before vs After comparison** untuk validasi differencing
-5. **Model order suggestion** berdasarkan cut-off patterns
+1. **Calculate STACF/STPACF** untuk 3 jenis spatial weights
+2. **Reduced lag**: 20 (vs 40 sebelumnya) untuk fokus pola utama
+3. **Confidence bands**: ±1.96/√n untuk signifikansi
+4. **Function-based plotting**: 2x3 layout dalam 1 gambar
+5. **Before vs After comparison**: Validasi differencing effectiveness
 
-**Expected Results After Good Differencing**:
-- **STACF**: Rapid decay, clear cut-off untuk MA order
-- **STPACF**: Clear cut-off untuk AR order  
-- **Values**: Mayoritas dalam batas ±0.2
-- **Seasonality**: Hilang atau minimal
-
-**Model Identification Rules**:
-```
-STACF cut-off at lag q → MA(q) component
-STPACF cut-off at lag p → AR(p) component
-Both decay gradually → ARMA(p,q)
-```
+**Expected Results**:
+- **Faster decay** ke nol dibanding sebelum differencing
+- **Reduced periodic spikes** - seasonal pattern hilang
+- **Clear cut-off patterns** untuk model identification
 
 **Output**: 
-- Plots STACF/STPACF yang "clean"
-- Suggested model order: STARIMA(p,1,q)(P,1,Q)₁₂
-- Confirmation bahwa data siap untuk modeling
+- 1 gambar 2x3 (3 STACF + 3 STPACF)
+- Persentase reduction dari before differencing
+- Summary statistik per weight type
+- Confirmation data siap modeling
 
 **Mengapa Penting**: 
-- **Validation** bahwa differencing strategy berhasil
-- **Model selection** berdasarkan correlation patterns
-- **Quality check** sebelum lanjut ke parameter estimation
+- **Validation** differencing berhasil
+- **Model order identification** dari cut-off patterns
+- **Spatial weight selection** untuk modeling
 
 ---
 

@@ -28,14 +28,14 @@ Proyek ini mengimplementasikan model STARIMA (Space-Time AutoRegressive Integrat
 
 | No | File | Description | Status | Output |
 |----|------|-------------|--------|--------|
-| 00 | Setup_Library.R | Environment setup and package installation | ⏳ | Packages ready |
-| 01 | Load_Data.R | Load and format spatio-temporal rainfall data | ⏳ | rainfall_data.RData |
-| 02 | Spatial_Weights.R | Create spatial weight matrices | ⏳ | spatial_weights.RData |
-| 03 | BoxCox_Transform.R | Box-Cox transformation for variance stabilization | ⏳ | boxcox_data.RData |
-| 04 | STACF_STPACF_Before.R | STACF/STPACF analysis before differencing | ⏳ | stacf_before.png |
-| 05 | Stationarity_Test.R | Unit root tests (ADF, KPSS) | ⏳ | stationarity_results.RData |
-| 06 | Differencing.R | Apply differencing to achieve stationarity | ⏳ | differenced_data.RData |
-| 07 | STACF_STPACF_After.R | STACF/STPACF analysis after differencing | ⏳ | stacf_after.png |
+| 00 | Setup_Library.R | Environment setup and package installation | ✅ | Packages ready |
+| 01 | Load_Data.R | Load and format spatio-temporal rainfall data | ✅ | rainfall_data.RData |
+| 02 | Spatial_Weights.R | Create spatial weight matrices | ✅ | spatial_weights.RData |
+| 03 | BoxCox_Transform.R | Box-Cox transformation for variance stabilization | ✅ | boxcox_data.RData |
+| 04 | STACF_STPACF_Before.R | STACF/STPACF analysis before differencing with confidence bands | ✅ | stacf_before.png |
+| 05 | Stationarity_Test.R | Unit root tests (ADF, KPSS) | ✅ | stationarity_results.RData |
+| 06 | Differencing.R | Apply seasonal differencing (1-B^12) with D=1, d=0 | ✅ | differenced_data.RData |
+| 07 | STACF_STPACF_After.R | STACF/STPACF analysis after differencing with confidence bands | ✅ | stacf_after.png |
 | 08 | Data_Centering.R | Data centering and scaling | ⏳ | centered_data.RData |
 | 09 | Data_Split.R | Split data into train/test sets for validation | ⏳ | train_test_data.RData |
 | 10 | STARIMA_Model.R | Model identification and estimation | ⏳ | starima_model.RData |
